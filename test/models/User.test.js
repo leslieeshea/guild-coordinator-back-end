@@ -13,4 +13,11 @@ describe('User model', () => {
       _id: expect.any(mongoose.Types.ObjectId)
     });
   });
+
+  it('requires a username', () => {
+    const user = new User({});
+    const errors = user.validateSync().errors;
+    
+    expect(errors.username.message).toEqual('Path `username` is required.');
+  });
 });
