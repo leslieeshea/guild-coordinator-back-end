@@ -16,4 +16,12 @@ describe('Guild model', () => {
       _id: expect.any(mongoose.Types.ObjectId)
     });
   });
+
+  it('requires a name, game, and array of member ids', () => {
+    const guild = new Guild({});
+    const errors = guild.validateSync().errors;
+
+    expect(errors.name.message).toEqual('Path `name` is required.');
+    expect(errors.game.message).toEqual('Path `game` is required.');
+  });
 });
