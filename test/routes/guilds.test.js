@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const { getUsers, getGuild, getAgent } = require('../data-helpers');
 
 describe('Guilds routes', () => {
@@ -38,6 +39,38 @@ describe('Guilds routes', () => {
       name: expect.any(String),
       game: expect.any(String),
       members: expect.any(Array),
+      _id: expect.any(String)
+    });
+  });
+
+  it('can update the array of members', async() => {
+    const users = await getUsers();
+    const members = users.map(user => user._id.toString());
+
+    const testGuild = await getAgent()
+      .post('/api/v1/guilds')
+      .send({
+        name: 'Super Cool Guild',
+        game: 'Dungeons and Dragons',
+        members
+      });
+    
+    const newMember = new mongoose.Types.ObjectId();
+    const newMembersArray = [... members, newMember.toString()];
+    const id = testGuild.body._id;
+
+    const guild = await getAgent()
+      .patch(`/api/v1/guilds/${id}`)
+      .send({
+        name: 'Super Cool Guild',
+        game: 'Dungeons and Dragons',
+        members: newMembersArray
+      });
+
+    expect(guild.body).toEqual({
+      name: 'Super Cool Guild',
+      game: 'Dungeons and Dragons',
+      members: newMembersArray,
       _id: expect.any(String)
     });
   });
