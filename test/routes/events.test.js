@@ -25,4 +25,11 @@ describe('Event routes', () => {
       
     });
   });
+
+  it('can get a list of all events', async() => {
+    const events = await getAgent()
+      .get('/api/v1/events');
+
+    expect(events.body).toHaveLength(10);
+  });
 });
