@@ -20,4 +20,11 @@ describe('Guilds routes', () => {
       __v: 0
     });
   });
+
+  it('can get a list of all guilds', async() => {
+    const guilds = await getAgent()
+      .get('/api/v1/guilds');
+
+    expect(guilds.body).toHaveLength(5);
+  });
 });
