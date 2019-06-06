@@ -14,7 +14,7 @@ module.exports = async({ userCount = 20, guildCount = 5, eventCount = 10 } = {})
   const guilds = [...Array(guildCount)].map(() => ({
     name: chance.name(),
     game: chance.word(),
-    members: chance.pick(createdUsers, 5)._id
+    members: chance.pick(createdUsers, 5).map(user => user._id)
   }));
   
   const createdGuilds = await Guild.create(guilds);
