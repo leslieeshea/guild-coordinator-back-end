@@ -48,4 +48,39 @@ describe('Event routes', () => {
       _id: expect.any(String),
     });
   });
+
+  it('can update title, description, date and time of an event by id', async() => {
+    const guild = await getGuild();
+    const guildId = guild._id;
+
+    const testEvent = await getAgent()
+      .post('/api/v1/events')
+      .send({
+        title: 'Meeting tonight',
+        description: 'Five-man dungeons',
+        date: '06-06-2019',
+        time: '4:00 PM',
+        guild: guildId
+      });
+
+    const id = testEvent.body._id;
+
+    const event = await getAgent()
+      .patch(`/api/v1/events/${id}`)
+      .send({
+        title: 'Meeting tomorrow',
+        description: 'Ten-man raid',
+        date: '06-07-2019',
+        time: '6:00 PM',
+      });
+
+    expect(event.body).toEqual({
+      title: 'Meeting tomorrow',
+      description: 'Ten-man raid',
+      date: '06-07-2019',
+      time: '6:00 PM',
+      guild: guildId,
+      _id: expect.any(String)
+    });
+  });
 });
