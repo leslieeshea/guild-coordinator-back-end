@@ -1,4 +1,4 @@
-const { getGuild, getAgent } = require('../data-helpers');
+const { getGuild, getEvent, getAgent } = require('../data-helpers');
 
 describe('Event routes', () => {
   it('can create an event', async() => {
@@ -22,7 +22,6 @@ describe('Event routes', () => {
       guild: id,
       _id: expect.any(String),
       __v: 0
-      
     });
   });
 
@@ -31,5 +30,22 @@ describe('Event routes', () => {
       .get('/api/v1/events');
 
     expect(events.body).toHaveLength(10);
+  });
+
+  it('can get an event by id', async() => {
+    const testEvent = await getEvent();
+    const id = testEvent._id;
+
+    const event = await getAgent()
+      .get(`/api/v1/events/${id}`);
+    
+    expect(event.body).toEqual({
+      title: expect.any(String),
+      description: expect.any(String),
+      date: expect.any(String),
+      time: expect.any(String),
+      guild: expect.any(String),
+      _id: expect.any(String),
+    });
   });
 });
