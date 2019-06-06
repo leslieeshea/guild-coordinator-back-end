@@ -22,6 +22,23 @@ describe('Guilds routes', () => {
     });
   });
 
+  it('can get an event by guild id', async() => {
+    const guild = await getGuild();
+    const id = guild._id;
+
+    const events = await getAgent()
+      .get(`/api/v1/guilds/events/${id}`);
+
+    expect(events.body[0]).toEqual({
+      title: expect.any(String),
+      description: expect.any(String),
+      date: expect.any(String),
+      time: expect.any(String),
+      guild: id.toString(),
+      _id: expect.any(String)
+    });
+  });
+
   it('can get a list of all guilds', async() => {
     const guilds = await getAgent()
       .get('/api/v1/guilds');
@@ -32,6 +49,7 @@ describe('Guilds routes', () => {
   it('can get a guild by id', async() => {
     const testGuild = await getGuild();
     const id = testGuild._id;
+    
     const guild = await getAgent()
       .get(`/api/v1/guilds/${id}`);
     
